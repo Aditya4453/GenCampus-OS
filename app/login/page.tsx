@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
-import { Sparkles } from "lucide-react";
+import { Sparkles, Loader2 } from "lucide-react";
 
 export default function LoginPage() {
   const [isLogin, setIsLogin] = useState(true);
@@ -77,24 +77,33 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
-        <Link href="/" className="flex items-center justify-center gap-2 mb-8">
-          <Sparkles className="w-8 h-8 text-primary" />
-          <span className="text-2xl font-bold">GenCampus OS</span>
+    <div className="min-h-screen bg-black grain relative overflow-hidden flex items-center justify-center p-4">
+      {/* Subtle background gradients */}
+      <div className="absolute top-20 right-20 w-[400px] h-[400px] gradient-orange opacity-20 blur-3xl"></div>
+      <div className="absolute bottom-20 left-20 w-[500px] h-[500px] gradient-blue opacity-20 blur-3xl"></div>
+
+      <div className="w-full max-w-md relative z-10">
+        {/* Logo */}
+        <Link href="/" className="flex items-center justify-center gap-3 mb-8">
+          <Sparkles className="w-8 h-8 text-white" />
+          <span className="text-2xl font-semibold">GenCampus OS</span>
         </Link>
 
-        <Card className="bg-white/5 backdrop-blur-lg border-white/10">
-          <CardHeader>
-            <CardTitle className="text-2xl text-center">
+        {/* Auth Card */}
+        <Card className="glass-card fade-in">
+          <CardHeader className="text-center">
+            <CardTitle className="text-3xl font-bold mb-2">
               {isLogin ? "Welcome Back" : "Create Account"}
             </CardTitle>
+            <p className="text-gray-400 font-light">
+              {isLogin ? "Sign in to continue creating" : "Start your creative journey"}
+            </p>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-5">
               {!isLogin && (
                 <div className="space-y-2">
-                  <Label htmlFor="name">Name</Label>
+                  <Label htmlFor="name" className="font-medium">Name</Label>
                   <Input
                     id="name"
                     type="text"
@@ -104,11 +113,12 @@ export default function LoginPage() {
                       setFormData({ ...formData, name: e.target.value })
                     }
                     required={!isLogin}
+                    className="bg-white/5 border-white/10 focus:border-white/20 h-12"
                   />
                 </div>
               )}
               <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email" className="font-medium">Email</Label>
                 <Input
                   id="email"
                   type="email"
@@ -118,10 +128,11 @@ export default function LoginPage() {
                     setFormData({ ...formData, email: e.target.value })
                   }
                   required
+                  className="bg-white/5 border-white/10 focus:border-white/20 h-12"
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
+                <Label htmlFor="password" className="font-medium">Password</Label>
                 <Input
                   id="password"
                   type="password"
@@ -131,22 +142,34 @@ export default function LoginPage() {
                     setFormData({ ...formData, password: e.target.value })
                   }
                   required
+                  className="bg-white/5 border-white/10 focus:border-white/20 h-12"
                 />
               </div>
-              <Button type="submit" className="w-full" disabled={loading}>
-                {loading ? "Loading..." : isLogin ? "Login" : "Sign Up"}
+              <Button 
+                type="submit" 
+                className="w-full h-12 btn-primary" 
+                disabled={loading}
+              >
+                {loading ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    Loading...
+                  </>
+                ) : (
+                  isLogin ? "Sign In" : "Create Account"
+                )}
               </Button>
             </form>
 
-            <div className="mt-4 text-center text-sm">
+            <div className="mt-6 text-center text-sm">
               <button
                 type="button"
                 onClick={() => setIsLogin(!isLogin)}
-                className="text-primary hover:underline"
+                className="text-gray-400 hover:text-white font-light transition-colors"
               >
                 {isLogin
                   ? "Don't have an account? Sign up"
-                  : "Already have an account? Login"}
+                  : "Already have an account? Sign in"}
               </button>
             </div>
           </CardContent>

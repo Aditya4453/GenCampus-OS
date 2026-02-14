@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
-import { Sparkles, ArrowLeft } from "lucide-react";
+import { Sparkles, ArrowLeft, Loader2 } from "lucide-react";
 import Link from "next/link";
 
 export default function CreatePage() {
@@ -66,34 +66,49 @@ export default function CreatePage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
-      <div className="container mx-auto px-4 py-8">
-        <nav className="flex justify-between items-center mb-12">
-          <div className="flex items-center gap-2">
-            <Sparkles className="w-8 h-8 text-primary" />
-            <span className="text-2xl font-bold">GenCampus OS</span>
+    <div className="min-h-screen bg-black grain relative overflow-hidden">
+      {/* Subtle background gradients */}
+      <div className="absolute top-20 right-20 w-[400px] h-[400px] gradient-orange opacity-20 blur-3xl"></div>
+      <div className="absolute bottom-20 left-20 w-[500px] h-[500px] gradient-purple opacity-20 blur-3xl"></div>
+
+      <div className="container mx-auto px-6 py-8 relative z-10">
+        {/* Navigation */}
+        <nav className="flex justify-between items-center mb-16">
+          <div className="flex items-center gap-3">
+            <Sparkles className="w-6 h-6 text-white" />
+            <span className="text-xl font-semibold">GenCampus OS</span>
           </div>
           <Link href="/dashboard">
-            <Button variant="ghost">
+            <Button className="btn-secondary">
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Dashboard
             </Button>
           </Link>
         </nav>
 
-        <div className="max-w-2xl mx-auto">
-          <h1 className="text-4xl font-bold mb-8 text-center">
-            Create New Campaign
-          </h1>
+        <div className="max-w-3xl mx-auto">
+          {/* Header */}
+          <div className="text-center mb-12 fade-in">
+            <h1 className="text-5xl font-bold mb-4">
+              Create New Campaign
+            </h1>
+            <p className="text-gray-400 text-lg font-light">
+              Fill in the details and let AI create your marketing magic
+            </p>
+          </div>
 
-          <Card className="bg-white/5 backdrop-blur-lg border-white/10">
+          {/* Form Card */}
+          <Card className="glass-card fade-in">
             <CardHeader>
-              <CardTitle>Event Details</CardTitle>
+              <CardTitle className="text-2xl font-semibold">Event Details</CardTitle>
+              <p className="text-gray-400 mt-2 font-light">Tell us about your event</p>
             </CardHeader>
             <CardContent>
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="space-y-2">
-                  <Label htmlFor="eventName">Event Name *</Label>
+                  <Label htmlFor="eventName" className="text-base font-medium">
+                    Event Name <span className="text-red-400">*</span>
+                  </Label>
                   <Input
                     id="eventName"
                     placeholder="e.g., Tech Fest 2024"
@@ -102,11 +117,14 @@ export default function CreatePage() {
                       setFormData({ ...formData, eventName: e.target.value })
                     }
                     required
+                    className="bg-white/5 border-white/10 focus:border-white/20 h-12"
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="theme">Theme *</Label>
+                  <Label htmlFor="theme" className="text-base font-medium">
+                    Theme <span className="text-red-400">*</span>
+                  </Label>
                   <Input
                     id="theme"
                     placeholder="e.g., Innovation and Future Technology"
@@ -115,11 +133,14 @@ export default function CreatePage() {
                       setFormData({ ...formData, theme: e.target.value })
                     }
                     required
+                    className="bg-white/5 border-white/10 focus:border-white/20 h-12"
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="audience">Target Audience</Label>
+                  <Label htmlFor="audience" className="text-base font-medium">
+                    Target Audience
+                  </Label>
                   <Input
                     id="audience"
                     placeholder="e.g., Engineering students, Tech enthusiasts"
@@ -127,14 +148,17 @@ export default function CreatePage() {
                     onChange={(e) =>
                       setFormData({ ...formData, audience: e.target.value })
                     }
+                    className="bg-white/5 border-white/10 focus:border-white/20 h-12"
                   />
-                  <p className="text-xs text-gray-400">
+                  <p className="text-xs text-gray-500 font-light">
                     Leave blank for default: college students
                   </p>
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="tone">Tone</Label>
+                  <Label htmlFor="tone" className="text-base font-medium">
+                    Tone
+                  </Label>
                   <Input
                     id="tone"
                     placeholder="e.g., Professional, Energetic, Fun"
@@ -142,22 +166,22 @@ export default function CreatePage() {
                     onChange={(e) =>
                       setFormData({ ...formData, tone: e.target.value })
                     }
+                    className="bg-white/5 border-white/10 focus:border-white/20 h-12"
                   />
-                  <p className="text-xs text-gray-400">
+                  <p className="text-xs text-gray-500 font-light">
                     Leave blank for default: energetic and engaging
                   </p>
                 </div>
 
                 <Button
                   type="submit"
-                  className="w-full"
-                  size="lg"
+                  className="w-full h-14 text-base btn-primary"
                   disabled={loading}
                 >
                   {loading ? (
                     <>
-                      <Sparkles className="w-5 h-5 mr-2 animate-spin" />
-                      Generating...
+                      <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                      Generating Magic...
                     </>
                   ) : (
                     <>
@@ -170,11 +194,13 @@ export default function CreatePage() {
             </CardContent>
           </Card>
 
-          <div className="mt-8 text-center text-sm text-gray-400">
-            <p>
-              AI will generate: Instagram poster, caption, email invite,
+          {/* Info Card */}
+          <div className="mt-8 glass-card rounded-2xl p-6 text-center fade-in">
+            <p className="text-gray-400 mb-2 font-light">
+              ✨ AI will generate: Instagram poster, caption, email invite,
               WhatsApp message, and landing page
             </p>
+            <p className="text-sm text-gray-500 font-light">Usually takes 5-10 seconds</p>
           </div>
         </div>
       </div>

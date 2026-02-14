@@ -34,20 +34,69 @@ export async function POST(req: Request) {
     });
 
     // Generate marketing content with Groq
-    const prompt = `Generate a complete marketing kit for a college event with these details:
-Event Name: ${eventName}
-Theme: ${theme}
-Target Audience: ${audience || 'college students'}
-Tone: ${tone || 'energetic and engaging'}
+    const prompt = `You are an expert marketing copywriter specializing in college events and Gen-Z communication. Create a complete marketing kit for this event:
 
-Provide the following in JSON format:
-1. posterPrompt: A detailed prompt for generating an Instagram poster (describe visual style, colors, layout, text placement)
-2. caption: An engaging Instagram caption with emojis and hashtags (3-5 lines)
-3. emailInvite: A professional email invitation in HTML format with inline CSS (complete HTML structure)
-4. whatsappMessage: A concise WhatsApp broadcast message (2-3 lines max)
-5. landingPageHTML: A complete, modern, responsive landing page HTML with inline CSS (full HTML document with hero section, features, and CTA)
+EVENT DETAILS:
+- Event Name: ${eventName}
+- Theme: ${theme}
+- Target Audience: ${audience || 'college students'}
+- Tone: ${tone || 'energetic and engaging'}
 
-Return ONLY valid JSON with these exact keys. Make the content creative, engaging, and professional.`;
+Generate the following content in JSON format:
+
+1. posterPrompt: A detailed, creative prompt for an Instagram poster design. Include:
+   - Visual style and mood (modern, vibrant, minimalist, etc.)
+   - Color palette suggestions
+   - Typography style
+   - Key visual elements and composition
+   - Text hierarchy and placement
+   Make it visually striking and Instagram-worthy.
+
+2. caption: An engaging Instagram caption that:
+   - Starts with a hook that grabs attention
+   - Uses 3-5 relevant emojis naturally (not excessive)
+   - Includes 2-3 lines of compelling copy
+   - Ends with a clear call-to-action
+   - Adds 5-8 relevant hashtags (mix of popular and niche)
+   - Feels authentic and conversational, not corporate
+   - Uses line breaks for readability
+
+3. emailInvite: A professional HTML email invitation with:
+   - Clean, modern design with inline CSS
+   - White background with professional color accents
+   - Responsive layout (max-width: 600px)
+   - Eye-catching header with event name (use gradient or solid color background)
+   - Brief introduction paragraph with proper spacing
+   - Key event details in a clean format (Date, Time, Venue as placeholders)
+   - Benefits/highlights in bullet points or cards
+   - Prominent CTA button with hover effect
+   - Footer with contact info placeholders
+   - Professional typography (system fonts: Arial, Helvetica, sans-serif)
+   - Proper padding and margins for readability
+   - Use tables for email compatibility
+   - Clean, minimal design - avoid clutter
+
+4. whatsappMessage: A concise WhatsApp broadcast (2-3 lines) that:
+   - Opens with an attention-grabbing emoji
+   - Delivers key info quickly
+   - Creates urgency or excitement
+   - Includes a clear next step
+   - Feels personal and conversational
+   - Uses 1-2 emojis maximum
+
+5. landingPageHTML: A complete, modern landing page with:
+   - Full HTML5 structure with inline CSS
+   - Hero section with gradient background
+   - Event highlights/features section
+   - About section
+   - Registration/CTA section
+   - Footer
+   - Responsive design
+   - Modern aesthetics (gradients, shadows, animations)
+   - Professional typography
+   - Mobile-optimized
+
+IMPORTANT: Return ONLY valid JSON with these exact keys: posterPrompt, caption, emailInvite, whatsappMessage, landingPageHTML. Make the content creative, authentic, and tailored to the event theme.`;
 
     console.log('Starting Groq API call...');
     
@@ -56,13 +105,13 @@ Return ONLY valid JSON with these exact keys. Make the content creative, engagin
       messages: [
         {
           role: 'system',
-          content: 'You are a marketing expert for college events. Return only valid JSON with no additional text or markdown formatting.',
+          content: 'You are an expert marketing copywriter and designer specializing in college events, Gen-Z communication, and viral social media content. You understand what makes content engaging, shareable, and conversion-focused. Return only valid JSON with no additional text, markdown formatting, or code blocks.',
         },
         { role: 'user', content: prompt },
       ],
       response_format: { type: 'json_object' },
-      temperature: 0.8,
-      max_tokens: 4000,
+      temperature: 0.9,
+      max_tokens: 4500,
     });
 
     console.log('Groq API call successful');
