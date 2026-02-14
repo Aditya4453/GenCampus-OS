@@ -39,16 +39,17 @@ MONGODB_URI=your_mongodb_connection_string
 - Free: [mongodb.com/cloud/atlas](https://www.mongodb.com/cloud/atlas)
 - Or use local MongoDB
 
-### 2️⃣ Add OpenAI API Key (Required)
+### 2️⃣ Add Groq API Key (Required)
 
 Open `.env` file and update:
 ```env
-OPENAI_API_KEY=sk-proj-your-key-here
+GROQ_API_KEY=gsk_your_actual_key_here
 ```
 
 **Get API Key:**
-- [platform.openai.com/api-keys](https://platform.openai.com/api-keys)
-- Requires GPT-4 and DALL-E 3 access
+- Go to https://console.groq.com/keys
+- Create account and generate key
+- It's FREE and super fast! ⚡
 
 ---
 

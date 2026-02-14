@@ -1,0 +1,13 @@
+# GitHub Push Commands
+# Replace YOUR_USERNAME with your actual GitHub username
+
+# Add the remote repository
+git remote add origin https://github.com/YOUR_USERNAME/gencampus-os.git
+
+# Rename branch to main (if needed)
+git branch -M main
+
+# Push to GitHub
+git push -u origin main
+
+# After running these commands, your code will be on GitHub!

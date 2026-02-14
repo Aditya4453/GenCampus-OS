@@ -53,18 +53,20 @@ MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/gencampus?retryW
 2. Start MongoDB service
 3. Keep current `.env` setting
 
-### 2. OpenAI API Key
+### 2. Groq API Key (Required for AI Generation)
 
-Currently using placeholder: `sk-proj-your-key-here`
+Currently using placeholder: `your_groq_api_key_here`
 
-1. Go to https://platform.openai.com/api-keys
-2. Create a new API key
-3. Update `.env`:
+1. Go to https://console.groq.com/keys
+2. Create account / Login
+3. Click "Create API Key"
+4. Copy the key (starts with `gsk_...`)
+5. Update `.env`:
 ```env
-OPENAI_API_KEY=sk-proj-your-actual-key-here
+GROQ_API_KEY=gsk_your_actual_key_here
 ```
 
-**Note:** You need GPT-4 and DALL-E 3 access for full functionality.
+**Note:** Groq is FREE and much faster than OpenAI! Perfect for text generation.
 
 ### 3. NextAuth Secret (Optional - Already Set)
 

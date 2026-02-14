@@ -110,8 +110,19 @@ export default function ProjectPage({ params }: { params: { id: string } }) {
           <h1 className="text-4xl font-bold mb-2">{project.eventName}</h1>
           <p className="text-gray-400 mb-8">{project.theme}</p>
 
+          {!project.generatedAssets || Object.keys(project.generatedAssets).length === 0 ? (
+            <Card className="bg-white/5 backdrop-blur-lg border-white/10">
+              <CardContent className="py-16 text-center">
+                <Sparkles className="w-16 h-16 text-primary mx-auto mb-4 animate-pulse" />
+                <h3 className="text-2xl font-semibold mb-2">Generating Your Campaign...</h3>
+                <p className="text-gray-400">
+                  Please wait while AI creates your marketing assets. This usually takes 5-10 seconds.
+                </p>
+              </CardContent>
+            </Card>
+          ) : (
           <div className="grid lg:grid-cols-2 gap-6">
-            {project.generatedAssets.posterUrl && (
+            {project.generatedAssets?.posterUrl && (
               <Card className="bg-white/5 backdrop-blur-lg border-white/10">
                 <CardHeader>
                   <CardTitle>Instagram Poster</CardTitle>
@@ -140,7 +151,7 @@ export default function ProjectPage({ params }: { params: { id: string } }) {
             )}
 
             <div className="space-y-6">
-              {project.generatedAssets.caption && (
+              {project.generatedAssets?.caption && (
                 <Card className="bg-white/5 backdrop-blur-lg border-white/10">
                   <CardHeader className="flex flex-row items-center justify-between">
                     <CardTitle>Instagram Caption</CardTitle>
@@ -165,7 +176,7 @@ export default function ProjectPage({ params }: { params: { id: string } }) {
                 </Card>
               )}
 
-              {project.generatedAssets.whatsappMessage && (
+              {project.generatedAssets?.whatsappMessage && (
                 <Card className="bg-white/5 backdrop-blur-lg border-white/10">
                   <CardHeader className="flex flex-row items-center justify-between">
                     <CardTitle>WhatsApp Message</CardTitle>
@@ -191,7 +202,7 @@ export default function ProjectPage({ params }: { params: { id: string } }) {
               )}
             </div>
 
-            {project.generatedAssets.emailInvite && (
+            {project.generatedAssets?.emailInvite && (
               <Card className="bg-white/5 backdrop-blur-lg border-white/10 lg:col-span-2">
                 <CardHeader className="flex flex-row items-center justify-between">
                   <CardTitle>Email Invite</CardTitle>
@@ -219,7 +230,7 @@ export default function ProjectPage({ params }: { params: { id: string } }) {
               </Card>
             )}
 
-            {project.generatedAssets.landingPageHTML && (
+            {project.generatedAssets?.landingPageHTML && (
               <Card className="bg-white/5 backdrop-blur-lg border-white/10 lg:col-span-2">
                 <CardHeader className="flex flex-row items-center justify-between">
                   <CardTitle>Landing Page</CardTitle>
@@ -240,6 +251,7 @@ export default function ProjectPage({ params }: { params: { id: string } }) {
               </Card>
             )}
           </div>
+          )}
         </div>
       </div>
     </div>
