@@ -53,24 +53,6 @@ If the server doesn't auto-restart:
 
 ---
 
-## 🎯 Example
-
-Your `.env` should look like this:
-
-```env
-# MongoDB Atlas
-MONGODB_URI=mongodb+srv://adityamodani06_db_user:Ny9JSsuSBRwr0v91@cluster0.f1jvpyy.mongodb.net/gencampus?retryWrites=true&w=majority&appName=Cluster0
-
-# Groq API - YOUR KEY HERE
-GROQ_API_KEY=gsk_abc123xyz789example_key_here
-
-# NextAuth
-NEXTAUTH_URL=http://localhost:3001
-NEXTAUTH_SECRET=supersecretkey123456789012345678901234567890
-
-# App
-NEXT_PUBLIC_APP_URL=http://localhost:3001
-```
 
 ---
 
