@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
-import groq from '@/lib/groq';
+import openrouter, { TEXT_MODEL } from '@/lib/openrouter';
 import dbConnect from '@/lib/mongodb';
 import Project from '@/models/Project';
 
@@ -33,8 +33,8 @@ export async function POST(req: Request) {
       status: 'generating',
     });
 
-    // Generate marketing content with Groq
-    const prompt = `You are an expert marketing copywriter specializing in college events and Gen-Z communication. Create a complete marketing kit for this event:
+    // Generate marketing content with OpenRouter (Gemini 2.0 Flash)
+    const prompt = `You are an elite marketing strategist and creative director specializing in viral college event campaigns. Create a premium, complete marketing kit for this event:
 
 EVENT DETAILS:
 - Event Name: ${eventName}
@@ -42,83 +42,97 @@ EVENT DETAILS:
 - Target Audience: ${audience || 'college students'}
 - Tone: ${tone || 'energetic and engaging'}
 
-Generate the following content in JSON format:
+Generate all content in a single valid JSON object with these exact keys:
 
-1. posterPrompt: A detailed, creative prompt for an Instagram poster design. Include:
-   - Visual style and mood (modern, vibrant, minimalist, etc.)
-   - Color palette suggestions
-   - Typography style
-   - Key visual elements and composition
-   - Text hierarchy and placement
-   Make it visually striking and Instagram-worthy.
+---
 
-2. caption: An engaging Instagram caption that:
-   - Starts with a hook that grabs attention
-   - Uses 3-5 relevant emojis naturally (not excessive)
-   - Includes 2-3 lines of compelling copy
-   - Ends with a clear call-to-action
-   - Adds 5-8 relevant hashtags (mix of popular and niche)
-   - Feels authentic and conversational, not corporate
-   - Uses line breaks for readability
+"posterPrompt": 
+A rich, detailed AI image generation prompt for an Instagram poster. Include:
+- Art style (e.g. neon noir, retro futurism, bold geometric, cinematic dark)
+- Exact color palette with hex codes or descriptors (e.g. "electric purple #7B2FBE, neon cyan #00F5FF, deep black #0A0A0A")
+- Typography description (bold sans-serif, glitch text, handwritten accent, etc.)
+- Specific visual elements (floating elements, crowd silhouettes, light rays, bokeh, etc.)
+- Composition and layout (centered, diagonal tension, rule of thirds)
+- Mood/atmosphere (high energy, mysterious, euphoric, etc.)
+Make it ultra-detailed so an AI image model can generate a stunning poster.
 
-3. emailInvite: A professional HTML email invitation with:
-   - Clean, modern design with inline CSS
-   - White background with professional color accents
-   - Responsive layout (max-width: 600px)
-   - Eye-catching header with event name (use gradient or solid color background)
-   - Brief introduction paragraph with proper spacing
-   - Key event details in a clean format (Date, Time, Venue as placeholders)
-   - Benefits/highlights in bullet points or cards
-   - Prominent CTA button with hover effect
-   - Footer with contact info placeholders
-   - Professional typography (system fonts: Arial, Helvetica, sans-serif)
-   - Proper padding and margins for readability
-   - Use tables for email compatibility
-   - Clean, minimal design - avoid clutter
+---
 
-4. whatsappMessage: A concise WhatsApp broadcast (2-3 lines) that:
-   - Opens with an attention-grabbing emoji
-   - Delivers key info quickly
-   - Creates urgency or excitement
-   - Includes a clear next step
-   - Feels personal and conversational
-   - Uses 1-2 emojis maximum
+"caption":
+A viral Instagram caption. Requirements:
+- Opening hook that stops the scroll (1 powerful line)
+- 2-3 punchy lines of body copy with genuine Gen-Z voice
+- 3-5 well-placed emojis (not at end of every line — use naturally)
+- Clear CTA line
+- 6-10 hashtags across 2 rows: branded + trending + niche
+- Use line breaks between sections for readability
+- No corporate language. Sound like a cool campus insider.
 
-5. landingPageHTML: A complete, modern landing page with:
-   - Full HTML5 structure with inline CSS
-   - Hero section with gradient background
-   - Event highlights/features section
-   - About section
-   - Registration/CTA section
-   - Footer
-   - Responsive design
-   - Modern aesthetics (gradients, shadows, animations)
-   - Professional typography
-   - Mobile-optimized
+---
 
-IMPORTANT: Return ONLY valid JSON with these exact keys: posterPrompt, caption, emailInvite, whatsappMessage, landingPageHTML. Make the content creative, authentic, and tailored to the event theme.`;
+"emailInvite":
+A full professional HTML email. Use this exact structure:
+- DOCTYPE + head with responsive meta tags
+- Inline CSS only (no <style> blocks for email client compatibility)
+- Wrapper table max-width 600px, centered, white background
+- Header: full-width gradient banner (match event theme colors) with event name in large white bold text
+- Body: warm welcome paragraph, then a 2-column highlights grid (use tables), then a divider
+- Details block: Date / Time / Venue (use placeholder values like [DATE], [TIME], [VENUE])
+- CTA button: pill-shaped, gradient background, white bold text "Register Now →", centered
+- Footer: dark background, college name placeholder, unsubscribe link
+- Use system fonts: 'Segoe UI', Arial, sans-serif
+- Make it look like a real premium event invite, not a newsletter
 
-    console.log('Starting Groq API call...');
-    
-    const completion = await groq.chat.completions.create({
-      model: 'llama-3.3-70b-versatile',
+---
+
+"whatsappMessage":
+A punchy WhatsApp broadcast message:
+- Line 1: bold opener with 1 emoji + event name
+- Line 2: key detail (date/time placeholder) + hook
+- Line 3: CTA with link placeholder [LINK]
+- Max 3 lines, conversational, no hashtags, natural tone
+
+---
+
+"landingPageHTML":
+A complete single-page HTML landing page. Must include:
+- Full HTML5 boilerplate with <head>, Google Fonts import (Inter or Space Grotesk), and embedded <style>
+- CSS variables for the event color theme
+- Sticky nav bar with event name/logo and "Register" CTA button
+- Hero: full-viewport gradient section, large headline, subtitle, animated CTA button (pulse/glow effect)
+- "About the Event" section: left text + right decorative element (CSS-only)
+- Highlights section: 3-column card grid with icons (use Unicode/emoji icons), hover lift effect
+- Schedule/Timeline section: vertical timeline with 3-4 sample entries
+- Registration form section: card with Name, Email, College, Year fields + submit button
+- Footer: dark background, social icons (Unicode), copyright
+- Smooth scroll, subtle CSS animations (fadeInUp keyframes), fully responsive (mobile-first media queries)
+- Use the event's theme colors throughout via CSS variables
+
+CRITICAL: Return ONLY raw valid JSON. No markdown, no code fences, no explanation. Just the JSON object.`;
+
+    console.log('Starting OpenRouter API call...');
+
+    const completion = await openrouter.chat.completions.create({
+      model: TEXT_MODEL,
       messages: [
         {
           role: 'system',
-          content: 'You are an expert marketing copywriter and designer specializing in college events, Gen-Z communication, and viral social media content. You understand what makes content engaging, shareable, and conversion-focused. Return only valid JSON with no additional text, markdown formatting, or code blocks.',
+          content: 'You are an elite marketing strategist, viral content creator, and frontend developer. You produce premium-quality marketing assets for college events. You MUST return only a valid raw JSON object — no markdown, no code blocks, no extra text whatsoever.',
         },
         { role: 'user', content: prompt },
       ],
+      temperature: 1.0,
+      max_tokens: 8000,
       response_format: { type: 'json_object' },
-      temperature: 0.9,
-      max_tokens: 4500,
     });
 
-    console.log('Groq API call successful');
-    console.log('Response:', completion.choices[0].message.content?.substring(0, 200));
+    console.log('OpenRouter API call successful');
+    console.log('Model used:', completion.model);
+    console.log('Response preview:', completion.choices[0].message.content?.substring(0, 200));
 
-    const content = JSON.parse(completion.choices[0].message.content || '{}');
-    
+    const rawContent = completion.choices[0].message.content || '{}';
+    const content = JSON.parse(rawContent);
+
     console.log('Generated content keys:', Object.keys(content));
 
     // Convert posterPrompt to string if it's an object
@@ -127,9 +141,14 @@ IMPORTANT: Return ONLY valid JSON with these exact keys: posterPrompt, caption, 
       posterPromptString = JSON.stringify(posterPromptString);
     }
 
-    // Generate a placeholder poster URL (you can integrate with an image generation service later)
-    // For now, we'll use a placeholder image service
-    const posterUrl = `https://placehold.co/1080x1080/3B82F6/ffffff?text=${encodeURIComponent(eventName)}&font=roboto`;
+    // Generate AI poster using authenticated Pollinations.ai (sk_ key = no rate limits)
+    const pollinationsPrompt = encodeURIComponent(
+      typeof content.posterPrompt === 'string'
+        ? content.posterPrompt
+        : `${eventName} event poster, ${theme} theme, vibrant college event, professional design`
+    );
+    const pollinationsKey = process.env.POLLINATIONS_API_KEY;
+    const posterUrl = `https://image.pollinations.ai/prompt/${pollinationsPrompt}?width=1080&height=1080&nologo=true&model=flux&seed=${Date.now()}${pollinationsKey ? `&key=${pollinationsKey}` : ''}`;
 
     // Update project with generated assets
     project.generatedAssets = {
@@ -154,7 +173,7 @@ IMPORTANT: Return ONLY valid JSON with these exact keys: posterPrompt, caption, 
       status: error?.status,
       response: error?.response?.data,
     });
-    
+
     // Handle rate limiting
     if (error?.status === 429) {
       return NextResponse.json(
@@ -165,7 +184,7 @@ IMPORTANT: Return ONLY valid JSON with these exact keys: posterPrompt, caption, 
 
     // Return more detailed error for debugging
     return NextResponse.json(
-      { 
+      {
         error: 'Failed to generate content',
         details: error?.message || 'Unknown error',
       },

@@ -1,7 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ['oaidalleapiprodscus.blob.core.windows.net', 'placehold.co'],
+    domains: [
+      'oaidalleapiprodscus.blob.core.windows.net',
+      'image.pollinations.ai',
+    ],
   },
 };
 

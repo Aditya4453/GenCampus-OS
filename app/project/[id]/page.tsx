@@ -68,6 +68,23 @@ export default function ProjectPage({ params }: { params: { id: string } }) {
     });
   };
 
+  const downloadPoster = async () => {
+    if (!project?.generatedAssets?.posterUrl) return;
+    try {
+      const response = await fetch(project.generatedAssets.posterUrl);
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `${project.eventName.replace(/\s+/g, "-")}-poster.jpg`;
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch {
+      // Fallback: open in new tab if fetch fails (e.g. CORS)
+      window.open(project.generatedAssets.posterUrl, "_blank");
+    }
+  };
+
   const downloadHTML = () => {
     if (!project?.generatedAssets?.landingPageHTML) return;
     const blob = new Blob([project.generatedAssets.landingPageHTML], {
@@ -153,9 +170,7 @@ export default function ProjectPage({ params }: { params: { id: string } }) {
                       </p>
                       <Button
                         className="btn-primary w-full"
-                        onClick={() =>
-                          window.open(project.generatedAssets.posterUrl, "_blank")
-                        }
+                        onClick={downloadPoster}
                       >
                         <Download className="w-4 h-4 mr-2" />
                         Download Poster
@@ -237,7 +252,7 @@ export default function ProjectPage({ params }: { params: { id: string } }) {
                   <div className="bg-white rounded-xl overflow-hidden shadow-2xl">
                     <div
                       className="prose prose-sm max-w-none"
-                      style={{ 
+                      style={{
                         padding: '0',
                         background: 'white',
                         color: '#000'
