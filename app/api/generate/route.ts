@@ -128,9 +128,9 @@ CRITICAL: Return ONLY raw valid JSON. No markdown, no code fences, no explanatio
 
     console.log('OpenRouter API call successful');
     console.log('Model used:', completion.model);
-    console.log('Response preview:', completion.choices[0].message.content?.substring(0, 200));
-
     const rawContent = completion.choices[0].message.content || '{}';
+    console.log('Response preview:', rawContent.substring(0, 200));
+
     const content = JSON.parse(rawContent);
 
     console.log('Generated content keys:', Object.keys(content));
