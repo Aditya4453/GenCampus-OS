@@ -10,22 +10,44 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        border: "hsl(var(--border))",
+        border: "rgba(146, 164, 177, 0.15)",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
-        background: "hsl(var(--background))",
-        foreground: "hsl(var(--foreground))",
+        background: {
+          DEFAULT: "#1E2025",
+          secondary: "#29343D",
+        },
+        foreground: {
+          DEFAULT: "#D6E0E6",
+          heading: "#FFFFFF",
+        },
         primary: {
-          DEFAULT: "#3B82F6",
-          foreground: "#ffffff",
+          DEFAULT: "#3C5665",
+          hover: "#5A7480",
+          foreground: "#FFFFFF",
         },
         accent: {
-          DEFAULT: "#A855F7",
-          foreground: "#ffffff",
+          DEFAULT: "#92A4B1",
+          foreground: "#1E2025",
+        },
+      },
+      borderRadius: {
+        'xl': '12px',
+        '2xl': '18px',
+      },
+      animation: {
+        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+        'shimmer': 'shimmer 2s linear infinite',
+      },
+      keyframes: {
+        shimmer: {
+          '0%': { backgroundPosition: '-200% 0' },
+          '100%': { backgroundPosition: '200% 0' },
         },
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
+        "shimmer-gradient": "linear-gradient(90deg, transparent, rgba(214, 224, 230, 0.1), transparent)",
       },
     },
   },
